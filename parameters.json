@@ -42,7 +42,7 @@
             "value": "azadmin"
         },
         "adminPassword": {
-            "value": null
+            "value": "EnfoCast.Admin"
         },
         "patchMode": {
             "value": "Manual"
