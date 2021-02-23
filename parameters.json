@@ -41,6 +41,16 @@
         "adminUsername": {
             "value": "azadmin"
         },
+        
+        "adminPassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/9dde6ec7-3b28-4989-b01d-765780a5db59/resourceGroups/AZ-DEV-KEYVAULT/providers/Microsoft.KeyVault/vaults/UCP-KeyVault"
+                },
+                "secretName": "vmPassword"
+            }
+        }
+                        
         "patchMode": {
             "value": "Manual"
         }
