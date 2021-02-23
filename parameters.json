@@ -27,7 +27,7 @@
             "value": "azweb03"
         },
         "virtualMachineComputerName": {
-            "value": "azweb03NIC"
+            "value": "azweb03"
         },
         "virtualMachineRG": {
             "value": "AZ-Web"
@@ -40,9 +40,6 @@
         },
         "adminUsername": {
             "value": "azadmin"
-        },
-        "adminPassword": {
-            "value": "EnfoCast.Admin"
         },
         "patchMode": {
             "value": "Manual"
