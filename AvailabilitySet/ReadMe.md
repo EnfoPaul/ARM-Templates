@@ -7,4 +7,4 @@ If you need to provide a customised parameters file, update the file location re
 $ParameterURI = "https://raw.githubusercontent.com/EnfoPaul/ARM-Templates/main/AvailabilitySet/defaultParams.json"
 
 $TemplateURI = "https://raw.githubusercontent.com/EnfoPaul/ARM-Templates/main/AvailabilitySet/DeployAVSet.json"
-New-AzResourceGroupDeployment -Name remoteTemplateDeployment -ResourceGroupName AZ-Web -TemplateUri $TemplateURI -TemplateParameterUri $ParameterURI
+New-AzResourceGroupDeployment -Name DeployAVSet -ResourceGroupName AZ-Web -TemplateUri $TemplateURI -TemplateParameterUri $ParameterURI
