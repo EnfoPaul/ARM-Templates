@@ -29,9 +29,7 @@
         "virtualMachineComputerName": {
             "value": "AZWeb"
         },
-        "virtualMachineRG": {
-            "value": "AZ-Web"
-        },
+
         "osDiskType": {
             "value": "Standard_LRS"
         },
