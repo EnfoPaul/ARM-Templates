@@ -6,7 +6,7 @@
             "value": "uksouth"
         },
         "networkInterfaceName": {
-            "value": "azweb04NIC"
+            "value": "azweb05NIC"
         },
         "subnetName": {
             "value": "DevSubnet"
@@ -15,7 +15,7 @@
             "value": "/subscriptions/9dde6ec7-3b28-4989-b01d-765780a5db59/resourceGroups/AZ-DEV-NETWORK/providers/Microsoft.Network/virtualNetworks/DEV-VNET"
         },
         "publicIpAddressName": {
-            "value": "azweb04-ip"
+            "value": "azweb05-ip"
         },
         "publicIpAddressType": {
             "value": "Dynamic"
@@ -24,10 +24,10 @@
             "value": "Basic"
         },
         "virtualMachineName": {
-            "value": "azweb04"
+            "value": "azweb05"
         },
         "virtualMachineComputerName": {
-            "value": "azweb04"
+            "value": "azweb05"
         },
         "virtualMachineRG": {
             "value": "AZ-Web"
