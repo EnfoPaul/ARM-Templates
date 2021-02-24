@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "uksouth"
+        },
+        "networkInterfaceName": {
+            "value": "AZWeb"
+        },
+        "subnetName": {
+            "value": "DevSubnet"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/9dde6ec7-3b28-4989-b01d-765780a5db59/resourceGroups/AZ-DEV-NETWORK/providers/Microsoft.Network/virtualNetworks/DEV-VNET"
+        },
+        "publicIpAddressName": {
+            "value": "AZWeb"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        },
+        "virtualMachineName": {
+            "value": "AZWeb"
+        },
+        "virtualMachineComputerName": {
+            "value": "AZWeb"
+        },
+        "virtualMachineRG": {
+            "value": "AZ-Web"
+        },
+        "osDiskType": {
+            "value": "Standard_LRS"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_B1ms"
+        },
+        "adminUsername": {
+            "value": "azadmin"
+        },
+        "adminPassword": {
+            "reference": 
+            {
+            "keyVault": 
+                {
+                "id": "/subscriptions/9dde6ec7-3b28-4989-b01d-765780a5db59/resourceGroups/AZ-DEV-KEYVAULT/providers/Microsoft.KeyVault/vaults/UCP-KeyVault"
+                },
+            
+            "secretName": "vmPassword"
+            }
+        },
+        "patchMode": {
+            "value": "Manual"
+        },
+        "availabilitySetName": {
+            "value": "AZ-DEV-WEB-AS"
+        },
+        "autoShutdownStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "18:00"
+        },
+        "autoShutdownTimeZone": {
+            "value": "GMT Standard Time"
+        },
+        "autoShutdownNotificationStatus": {
+            "value": "Disabled"
+        },
+        "autoShutdownNotificationLocale": {
+            "value": "en"
+        }
+    }
+}
