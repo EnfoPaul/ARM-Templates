@@ -230,11 +230,6 @@
         "AVSet": {
             "type": "string",
             "value": "[parameters('availabilitySetName')]"
-        },
-
-        "ServerName": {
-            "type": "string",
-            "value": "[concat(parameters('virtualMachineName'),copyIndex(1))]"
         }
     }
 }
