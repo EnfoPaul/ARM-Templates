@@ -253,7 +253,7 @@
                 "protectedSettings": {
             
                     "Items": {
-                    "registrationKeyPrivate": "[listKeys(resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName')), '2018-01-15').Keys[0].value]"
+                    "registrationKeyPrivate": "[listKeys(resourceId('/subscriptions/9dde6ec7-3b28-4989-b01d-765780a5db59/resourceGroups/AZ-DEV-RESOURCES/providers/Microsoft.Automation/automationAccounts/', parameters('automationAccountName')), '2018-01-15').Keys[0].value]"
                     }
                 },
 
@@ -271,7 +271,7 @@
                     },
                 {
                 "Name": "RegistrationUrl",
-                "Value": "[reference(resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))).registrationUrl]",
+                "Value": "[reference(resourceId('/subscriptions/9dde6ec7-3b28-4989-b01d-765780a5db59/resourceGroups/AZ-DEV-RESOURCES/providers/Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))).registrationUrl]",
                 "TypeName": "System.String"                      
                 },
 
