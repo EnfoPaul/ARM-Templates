@@ -7,7 +7,7 @@ A collection of Microsoft Azure deployment templates
 ### Company : The UC Practice Ltd
 
 
-#### Usage   :
+#### *Usage   :*
 ####           Modify the parameter.json template to suit your requirements
 ####           Run the following powershell code from Azure console, updating the $RGName with the name of the resource group where the VMs should be deployed in your Azure tenant.
 
