@@ -62,7 +62,17 @@
         },
         "autoShutdownNotificationLocale": {
             "type": "string"
+        },
+
+        "automationAccountName": {
+            "type": "string"
+        },
+
+        "nodeConfigurationName": {
+            "type": "string",
+            "defaultValue": "WebServerConfig.IsWebServer"
         }
+
     },
 
     "variables": {
@@ -218,9 +228,86 @@
                     "timeInMinutes": "30"
                 }
             }
+        },
+
+        {
+
+            "copy": {
+            "name":"VMExtension",
+            "count": 2
+            },
+
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('virtualMachineName'),copyIndex(1),'/OnboardToDSC')]",
+            "apiVersion": "2020-06-01",
+            "location": "[parameters('location')]",
+            "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines/', concat(parameters('virtualMachineName'),copyIndex(1)))]"],
+
+            "properties": {
+
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.75",
+                "autoUpgradeMinorVersion": true,
+
+                "protectedSettings": {
+            
+                    "Items": {
+                    "registrationKeyPrivate": "[listKeys(resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName')), '2018-01-15').Keys[0].value]"
+                    }
+                },
+
+            "settings": {
+                "Properties":[
+                    {
+                        "Name": "RegistrationKey",
+                        "Value":{
+                                    "UserName": "PLACEHOLDER_DONOTUSE",
+                                    "Password": "PrivateSettingsRef:registrationKeyPrivate"
+                        },
+
+                        "TypeName": "System.Management.Automation.PSCredential"
+                    
+                    },
+                {
+                "Name": "RegistrationUrl",
+                "Value": "[reference(resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))).registrationUrl]",
+                "TypeName": "System.String"                      
+                },
+
+                {
+                "Name": "NodeConfigurationName",
+                "Value": "[parameters('nodeConfigurationName')]",
+                "TypeName": "System.String"
+                },
+
+                {
+                "Name": "ConfigurationMode",
+                "Value": "ApplyandAutoCorrect",
+                "TypeName": "System.String"
+                },
+
+                {
+                "Name": "RebootNodeIfNeeded",
+                "Value": true,
+                "TypeName": "System.Boolean"
+                },
+
+                {
+                "Name": "ActionAfterReboot",
+                "Value": "ContinueConfiguration",
+                "TypeName": "System.String"
+                }                 
+
+            ]
         }
 
-    ],
+    }
+
+}
+   
+
+],
 
     "outputs": {
         "adminUsername": {
