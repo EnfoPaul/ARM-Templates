@@ -50,6 +50,11 @@
             "secretName": "vmPassword"
             }
         },
+
+        "automationAccountName": {
+            "value": "AZ-DEV-AA" 
+        },
+
         "patchMode": {
             "value": "Manual"
         },
