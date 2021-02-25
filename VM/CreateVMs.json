@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
@@ -29,9 +29,7 @@
         "virtualMachineComputerName": {
             "type": "string"
         },
-        "virtualMachineRG": {
-            "type": "string"
-        },
+
         "osDiskType": {
             "type": "string"
         },
@@ -66,6 +64,7 @@
             "type": "string"
         }
     },
+
     "variables": {
         "vnetId": "[parameters('virtualNetworkId')]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
@@ -73,13 +72,42 @@
     },
 
     "resources": [
+
         {
-            "name": "[concat(parameters('networkInterfaceName'),copyIndex())]",
+            "copy": {
+            "name":"PublicIP",
+            "count": 2
+            },
+
+            "name": "[concat(parameters('publicIpAddressName'),copyIndex(1))]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2019-02-01",
+            "location": "[parameters('location')]",
+
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            },
+
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            }
+
+
+        },
+
+
+        {
+            "copy": {
+            "name": "NIC",
+            "count": 2
+            },
+
+            "name": "[concat(parameters('networkInterfaceName'),copyIndex(1))]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'),copyIndex())]"
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'),copyIndex(1))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -91,61 +119,45 @@
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIpAddress": {
-                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', concat(parameters('publicIpAddressName'),copyIndex()))]"
+                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', concat(parameters('publicIpAddressName'),copyIndex(1)))]"
                             }
                         }
                     }
                 ]
-            },
-            "copy": {
-                "name": "NIC",
-                "count": 2
             }
 
         },
 
+
         {
-            "name": "[concat(parameters('publicIpAddressName'),copyIndex())]",
-            "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2019-02-01",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "[parameters('publicIpAddressSku')]"
-            },
-
-            "properties": {
-                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
-            },
-
             "copy": {
-                "name":"PublicIP",
-                "count": 2
-            }
+            "name":"VMName",
+            "count": 2
+            },
 
-        },
-        {
-                        "name": "[concat(parameters('virtualMachineName'),copyIndex())]",
+            "name": "[concat(parameters('virtualMachineName'),copyIndex(1))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2020-12-01",
-            "copy": {
-                "name":"VMName",
-                "count": 2
-            },
+
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'),copyIndex())]"
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'),copyIndex(1))]"
             ],
+
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('virtualMachineSize')]"
                 },
+
                 "storageProfile": {
                     "osDisk": {
+                        "name":"[concat(parameters('virtualMachineName'),copyIndex(1),'_OSDisk')]",
                         "createOption": "fromImage",
                         "managedDisk": {
                             "storageAccountType": "[parameters('osDiskType')]"
                         }
                     },
+
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
@@ -156,12 +168,12 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'),copyIndex()))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'),copyIndex(1)))]"
                         }
                     ]
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('virtualMachineComputerName'),copyIndex())]",
+                    "computerName": "[concat(parameters('virtualMachineComputerName'),copyIndex(1))]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
@@ -178,17 +190,19 @@
                 }
             }
         },
+
         {
             "copy": {
-                "name": "ShutDn",
-                "count": 2
+             "name": "ShutDn",
+             "count": 2
             },
-            "name": "[concat('shutdown-computevm-', parameters('virtualMachineName'),copyIndex())]",
+            
+            "name": "[concat('shutdown-computevm-', parameters('virtualMachineName'),copyIndex(1))]",
             "type": "Microsoft.DevTestLab/schedules",
             "apiVersion": "2017-04-26-preview",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'),copyIndex())]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'),copyIndex(1))]"
             ],
             "properties": {
                 "status": "[parameters('autoShutdownStatus')]",
@@ -197,7 +211,7 @@
                     "time": "[parameters('autoShutdownTime')]"
                 },
                 "timeZoneId": "[parameters('autoShutdownTimeZone')]",
-                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('virtualMachineName'),copyIndex()))]",
+                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('virtualMachineName'),copyIndex(1)))]",
                 "notificationSettings": {
                     "status": "[parameters('autoShutdownNotificationStatus')]",
                     "notificationLocale": "[parameters('autoShutdownNotificationLocale')]",
@@ -207,10 +221,16 @@
         }
 
     ],
+
     "outputs": {
         "adminUsername": {
             "type": "string",
             "value": "[parameters('adminUsername')]"
+        },
+
+        "AVSet": {
+            "type": "string",
+            "value": "[parameters('availabilitySetName')]"
         }
     }
 }
